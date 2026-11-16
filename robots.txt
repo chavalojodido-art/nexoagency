@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chavalojodido-art.github.io/nexoagency/sitemap.xml
