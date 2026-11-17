@@ -136,6 +136,10 @@ input[type=range]{padding:0;border:0;background:transparent;accent-color:var(--n
 .form__hint{font-size:13px;color:var(--mut);text-align:center}
 .form input[aria-invalid=true]{border-color:#ff6b6b}
 .cta__mail{margin-top:28px;color:var(--mut)}.cta__mail a{color:var(--neon)}
+/* social */
+.social{margin-top:18px}.social__fb{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.18);text-decoration:none;color:var(--txt);font:600 15px/1 var(--fh);transition:border-color .2s,color .2s}
+.social__fb:hover,.social__icon:hover{border-color:var(--neon);color:var(--neon)}
+.social__icon{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);color:var(--txt);transition:border-color .2s,color .2s}
 /* footer */
 .foot{border-top:1px solid var(--line);padding:48px 0 calc(48px + env(safe-area-inset-bottom))}
 .foot__in{display:flex;flex-wrap:wrap;gap:16px 40px;align-items:center;justify-content:space-between;color:var(--mut);font-size:14px}
