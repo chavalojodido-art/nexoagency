@@ -16,16 +16,23 @@ const META = {
         desc: 'Nexo Agency builds WhatsApp ordering apps, catalogs, 24/7 appointment booking and professional websites for businesses in Latin America and worldwide. See a demo of your own business before you pay.',
         toggle: 'ES', toggleLabel: 'Cambiar a español', menu: 'Open menu' }
 };
-const MARQUEE_EN = { 'Restaurantes':'Restaurants','Cafeterías':'Cafés','Clínicas':'Clinics','Tiendas':'Stores','Hoteles y lodges':'Hotels & lodges','Salones de belleza':'Beauty salons','Talleres':'Workshops','Consultorios':'Practices' };
+const MARQUEE_EN = { 'Restaurantes':'Restaurants','Cafeterías':'Coffee shops','Clínicas':'Clinics','Tiendas':'Stores','Hoteles y lodges':'Hotels & lodges','Salones de belleza':'Beauty salons','Talleres':'Workshops','Consultorios':'Practices' };
 $$('.marquee__track span').forEach(s => s.dataset.en = MARQUEE_EN[s.textContent] || s.textContent);
 $$('[data-en]').forEach(el => el.dataset.es = el.innerHTML);
+const ATTRS = ['src', 'alt', 'aria-label'];
+ATTRS.forEach(a => $$(`[data-en-${a}]`).forEach(el => el.setAttribute(`data-es-${a}`, el.getAttribute(a))));
+const OG = { es: { t: $('meta[property="og:title"]').content, d: $('meta[property="og:description"]').content, l: 'es_LA' },
+  en: { t: 'Nexo Agency · Your business, selling 24/7', d: 'WhatsApp ordering apps, 24/7 appointment booking and professional websites. See a demo of your own business before you pay.', l: 'en_US' } };
 function setLang(l) {
   lang = l;
   document.documentElement.lang = l;
   $$('[data-en]').forEach(el => el.innerHTML = el.dataset[l]);
+  ATTRS.forEach(a => $$(`[data-en-${a}]`).forEach(el => el.setAttribute(a, el.getAttribute(`data-${l}-${a}`))));
+  $('meta[property="og:title"]').content = OG[l].t; $('meta[property="og:description"]').content = OG[l].d; $('meta[property="og:locale"]').content = OG[l].l;
   document.title = META[l].title;
   $('meta[name=description]').content = META[l].desc;
   const b = $('#lang'); b.textContent = META[l].toggle; b.setAttribute('aria-label', META[l].toggleLabel);
+  $('#burger').setAttribute('aria-label', $('#burger').getAttribute('aria-expanded') === 'true' ? (l === 'es' ? 'Cerrar menú' : 'Close menu') : (l === 'es' ? 'Abrir menú' : 'Open menu'));
   try { localStorage.setItem('nexo_lang', l); } catch (e) {}
   updateWa(); calc();
 }
@@ -48,6 +55,7 @@ $('#leadForm').addEventListener('submit', e => {
   $$('input[required]', f).forEach(i => { const bad = !i.value.trim(); i.setAttribute('aria-invalid', bad); if (bad && ok) { i.focus(); ok = false; } });
   if (!ok) return;
   const d = Object.fromEntries(new FormData(f));
+  d.necesidad = f.necesidad.options[f.necesidad.selectedIndex].textContent.trim();
   const msg = lang === 'es'
     ? `¡Hola Nexo Agency! 👋\nSoy ${d.nombre}, de ${d.negocio}.\nMe interesa: ${d.necesidad}.\nQuiero ver una demo gratis de mi negocio.`
     : `Hi Nexo Agency! 👋\nI'm ${d.nombre}, from ${d.negocio}.\nI'm interested in: ${d.necesidad}.\nI'd like to see a free demo of my business.`;
@@ -68,7 +76,7 @@ const nav = $('#nav'), fab = $('.fab');
 const onScroll = () => { const y = scrollY; nav.classList.toggle('is-solid', y > 40); fab.classList.toggle('is-on', y > innerHeight * .8); };
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
 const burger = $('#burger'), mnav = $('#mnav');
-burger.addEventListener('click', () => { const o = burger.getAttribute('aria-expanded') !== 'true'; burger.setAttribute('aria-expanded', o); mnav.hidden = !o; nav.classList.add('is-solid'); });
+burger.addEventListener('click', () => { const o = burger.getAttribute('aria-expanded') !== 'true'; burger.setAttribute('aria-expanded', o); mnav.hidden = !o; burger.setAttribute('aria-label', o ? (lang === 'es' ? 'Cerrar menú' : 'Close menu') : (lang === 'es' ? 'Abrir menú' : 'Open menu')); nav.classList.add('is-solid'); });
 $$('a', mnav).forEach(a => a.addEventListener('click', () => { burger.setAttribute('aria-expanded', false); mnav.hidden = true; }));
 
 /* ---- Reveal ---- */
